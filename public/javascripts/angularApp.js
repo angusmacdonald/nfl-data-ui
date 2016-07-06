@@ -65,194 +65,65 @@ app.factory('teams', function() {
 app.factory('receivers', function() {
 
     var o = {
-        receivers: []
+        players: []
       };
 
-      o.receivers = 
-      [{
-        "label": "James Starks",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 20.49673202614379,
-          "highlight": "#F0AE1A",
-          "label": "455 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 0.0,
-          "highlight": "#234D42",
-          "label": "0 yards in air"
-        }],
-        "width": 12.35632183908046
-      }, {
-        "label": "Randall Cobb",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 21.803921568627455,
-          "highlight": "#F0AE1A",
-          "label": "417 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 21.542483660130717,
-          "highlight": "#234D42",
-          "label": "412 yards in air"
-        }],
-        "width": 22.701149425287355
-      }, {
-        "label": "Richard Rodgers",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 11.712418300653596,
-          "highlight": "#F0AE1A",
-          "label": "224 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 14.954248366013072,
-          "highlight": "#234D42",
-          "label": "286 yards in air"
-        }],
-        "width": 16.666666666666664
-      }, {
-        "label": "Eddie Lacy",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 10,
-          "highlight": "#F0AE1A",
-          "label": "215 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 0,
-          "highlight": "#234D42",
-          "label": "0 yards in air"
-        }],
-        "width": 5.747126436781609
-      }, {
-        "label": "James Jones",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 11.032679738562091,
-          "highlight": "#F0AE1A",
-          "label": "211 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 35.503267973856204,
-          "highlight": "#234D42",
-          "label": "679 yards in air"
-        }],
-        "width": 14.367816091954023
-      }, {
-        "label": "Davante Adams",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 6.483660130718955,
-          "highlight": "#F0AE1A",
-          "label": "124 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 18.771241830065364,
-          "highlight": "#234D42",
-          "label": "359 yards in air"
-        }],
-        "width": 14.367816091954023
-      }, {
-        "label": "Ty Montgomery",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 6.985294117647058,
-          "highlight": "#F0AE1A",
-          "label": "95 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 3.0147058823529416,
-          "highlight": "#234D42",
-          "label": "41 yards in air"
-        }],
-        "width": 4.310344827586207
-      }, {
-        "label": "John Kuhn",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 8.571428571428571,
-          "highlight": "#F0AE1A",
-          "label": "48 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 1.428571428571429,
-          "highlight": "#234D42",
-          "label": "8 yards in air"
-        }],
-        "width": 1.7241379310344827
-      }, {
-        "label": "Jeff Janis",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 3.670886075949367,
-          "highlight": "#F0AE1A",
-          "label": "29 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 6.329113924050633,
-          "highlight": "#234D42",
-          "label": "50 yards in air"
-        }],
-        "width": 0.5747126436781609
-      }, {
-        "label": "Justin Perillo",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 2.1568627450980395,
-          "highlight": "#F0AE1A",
-          "label": "22 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 7.8431372549019605,
-          "highlight": "#234D42",
-          "label": "80 yards in air"
-        }],
-        "width": 3.1609195402298855
-      }, {
-        "label": "Jared Abbrederis",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 1.6216216216216217,
-          "highlight": "#F0AE1A",
-          "label": "18 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 8.378378378378379,
-          "highlight": "#234D42",
-          "label": "93 yards in air"
-        }],
-        "width": 2.586206896551724
-      }, {
-        "label": "Aaron Ripkowski",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 7.777777777777778,
-          "highlight": "#F0AE1A",
-          "label": "14 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 2.2222222222222223,
-          "highlight": "#234D42",
-          "label": "4 yards in air"
-        }],
-        "width": 0.28735632183908044
-      }, {
-        "label": "Andrew Quarless",
-        "slices": [{
-          "color": "#FFB612",
-          "height": 3.225806451612903,
-          "highlight": "#F0AE1A",
-          "label": "10 yards after catch"
-        }, {
-          "color": "#203731",
-          "height": 6.774193548387098,
-          "highlight": "#234D42",
-          "label": "21 yards in air"
-        }],
-        "width": 1.1494252873563218
-      }
-    ]
+
+      var receivers = 
+      [
+        {  "PLAYER" : "Willis McGahee", "TEAM" : "BUF", "REC" : 28, "TAR" : 0, "YDS" : 178, "AVG" : 6.4, "TD" : 0, "LONG" : 19, "20+" : 0, "YDS/G" : 11.1, "FUM" : 0, "YAC" : 0, "1DN" : 10, "YEAR" : 2005 },
+{  "PLAYER" : "Sam Aiken", "TEAM" : "BUF", "REC" : 4, "TAR" : 0, "YDS" : 57, "AVG" : 14.3, "TD" : 0, "LONG" : 22, "20+" : 1, "YDS/G" : 3.6, "FUM" : 0, "YAC" : 0, "1DN" : 3, "YEAR" : 2005 }
+    ];
+
+  var totalReceptionNumbers = 0;
+  var totalYards = 0;
+
+  for(var num in receivers) {
+    if(receivers.hasOwnProperty(num)) {
+      var receiver = receivers[num];
+      totalReceptionNumbers += parseFloat( receiver['REC'] );
+      totalYards += parseFloat( receiver['YDS'] );
+    }
+  }
+
+
+for(var num in receivers) {
+    if(receivers.hasOwnProperty(num)) {
+      var receiver = receivers[num];
+
+      var Rwidth = (receiver['REC'] / parseFloat(totalReceptionNumbers)) * 100;
+      var Rlabel = receiver['PLAYER'];
+
+      var chartHeight = Math.max(parseFloat(10), ((receiver['YDS'] / parseFloat(totalYards)) * 100) * 2);
+      
+      var percentageYac = Math.min (parseFloat(1), parseFloat(receiver['YAC']) / parseFloat(receiver['YDS']));
+      var percentageNonYac = 1.0- percentageYac;
+
+      
+      var sliceNonYac = {
+        height: chartHeight * percentageNonYac,
+        color: "#203731",
+        highlight: "#234D42",
+        label: Math.max(0, receiver['YDS']-receiver['YAC']) + " yards in air"
+      };
+
+
+      var sliceYac = {
+        height: chartHeight * percentageYac,
+        color: "#FFB612",
+        highlight: "#F0AE1A",
+        label: receiver['YAC'] + " yards after catch"
+      };
+
+
+      o.players.push({
+        width: Rwidth,
+        label: Rlabel,
+        slices: [sliceYac, sliceNonYac]
+      });
+    }
+  }
+
     return o;
   });
 
@@ -312,7 +183,7 @@ app.factory('receivers', function() {
     'teams',
     function($scope, posts, receivers, teams) {
       $scope.posts = posts.posts;
-      $scope.receivers = receivers.receivers;
+      $scope.players = receivers.players;
       $scope.teams = teams.teams;
       $scope.selectedTeam = null;
 
