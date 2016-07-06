@@ -1,4 +1,29 @@
 
+
+<div class="container">
+      
+      <select name="teamSelect" id="teamSelect" ng-model="selectedTeam">
+      <div ng-repeat="team in teams">
+          <option ng-repeat="team in teams" ng-value="team.short" >{{team.name}}</option>
+      </div>
+   
+    </select>
+
+       <div>
+        {{selectedTeam}}
+      </div>
+
+
+      <div ng-repeat="rec in receivers">
+        <span style="font-size:20px; margin-left:10px;">
+        {{rec.label}} - width: {{rec.width}}
+        </span>
+      </div>
+
+
+
+</div> <!-- /container -->
+
       <div class="page-header">
         <h1>Flapper News</h1>
       </div>

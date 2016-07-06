@@ -1,0 +1,74 @@
+ body {
+                position: relative;
+                font-family: "proxima-nova", 'Helvetica Neue', 'Helvetica', 'sans-serif';
+                color: #232830;
+            }
+
+            #sides{
+            margin:0;
+            }
+            #left{
+            float:left;
+            width:50%;
+            overflow:hidden;
+            }
+            #right{
+            float:left;
+            width:50%;
+            overflow:hidden;
+            } 
+
+            #canvas-holder{
+                width:240px;
+            }
+
+            .spie-legend li span {
+              display: block;
+              width: 14px;
+              height: 14px;
+              border-radius: 7px;
+              float: left;
+              margin-top: 4px;
+              margin-right: 8px;
+            }
+
+            .spie-legend {
+              list-style: none;
+              margin: 0;
+              padding: 0;
+              font-size: 14px;
+              margin-top : 20px;
+
+            }
+
+            .spie-legend li {
+              margin-bottom : 4px;
+               list-style-type: none;
+            }
+
+            .spie-legend li:first-letter {
+              text-transform: capitalize;
+            }
+
+n-top: 25px;
+}
+.row {
+  margin-bottom: 20px;
+}
+.row .row {
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+[class*="col-"] {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background-color: #eee;
+  background-color: rgba(86,61,124,.15);
+  border: 1px solid #ddd;
+  border: 1px solid rgba(86,61,124,.2);
+}
+
+hr {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
