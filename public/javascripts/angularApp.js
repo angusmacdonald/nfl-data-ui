@@ -1,4 +1,4 @@
-var app = angular.module('nflStats', ['ui.router']);
+var app = angular.module('nflStats', ['ui.router', 'tc.chartjs']);
 
 
 
