@@ -11,22 +11,18 @@ module.exports = router;
 var mongoose = require('mongoose');
 var Post = mongoose.model('Post');
 var Comment = mongoose.model('Comment');
+var Receiving = mongoose.model('Receiving');
 
-router.get('/posts', function(req, res, next) {
-  Post.find(function(err, posts){
+
+router.get('/receiving', function(req, res, next) {
+  Receiving.
+  find({
+    TEAM: 'GB',
+    YEAR: 2015
+  }).exec(function(err, receiving){
     if(err){ return next(err); }
 
-    res.json(posts);
-  });
-});
-
-router.post('/posts', function(req, res, next) {
-  var post = new Post(req.body);
-
-  post.save(function(err, post){
-    if(err){ return next(err); }
-
-    res.json(post);
+    res.json(receiving);
   });
 });
 
