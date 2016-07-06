@@ -14,17 +14,27 @@ var Comment = mongoose.model('Comment');
 var Receiving = mongoose.model('Receiving');
 
 
-router.get('/receiving', function(req, res, next) {
+router.get('/receiving/:team/:year', function(req, res, next) {
   Receiving.
   find({
-    TEAM: 'GB',
-    YEAR: 2015
+    TEAM: req.params['team'],
+    YEAR: req.params['year']
   }).exec(function(err, receiving){
     if(err){ return next(err); }
 
     res.json(receiving);
   });
 });
+
+
+router.get('/receiving/:team/:year', function(req, res, next) {
+  req.receiving.populate('comments', function(err, receiving) {
+    if (err) { return next(err); }
+
+    res.json(post);
+  });
+});
+
 
 router.param('post', function(req, res, next, id) {
   var query = Post.findById(id);

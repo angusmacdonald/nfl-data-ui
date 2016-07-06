@@ -13,8 +13,7 @@ app.config([
         resolve: {
           postPromise: ['receivers',
             function(receivers) {
-              console.log("hi");
-              return receivers.getReceivers();
+              return receivers.getReceivers("GB", 2015);
             }
           ]
         }
@@ -34,10 +33,10 @@ app.factory('teams', function() {
 
   o.teams =
     [{
-    "short": "gbp",
+    "short": "GB",
     "name": "Green Bay Packers"
   }, {
-    "short": "dco",
+    "short": "DAL",
     "name": "Dallas Cowboys"
   }]
 
@@ -65,8 +64,9 @@ app.factory('receivers', ['$http',
       players: []
     };
 
-    o.getReceivers = function() {
-      return $http.get('/receiving').success(function(receivers) {
+    o.getReceivers = function(team, year) {
+      return $http.get('/receiving/' + team + '/' + year).success(function(receivers) {
+        o.players.splice(0,o.players.length)
         convertToSpie(receivers, o);
       });
     };
@@ -84,12 +84,17 @@ app.controller('MainCtrl', [
     $scope.players = receivers.players;
     $scope.teams = teams.teams;
     $scope.years = years.years;
-    $scope.selectedTeam = null;
-    $scope.selectedYear = null;
+    $scope.selectedTeam = "GB";
+    $scope.selectedYear = 2015;
+
+    $scope.updateDisplay = function() {
+      receivers.getReceivers($scope.selectedTeam, $scope.selectedYear);
+    };
   }
 ]);
 
 function convertToSpie(receivers, o) {
+
   var totalReceptionNumbers = 0;
   var totalYards = 0;
 

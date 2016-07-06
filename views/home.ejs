@@ -1,11 +1,11 @@
 <div class="container">
-	<select name="teamSelect" id="teamSelect" ng-model="selectedTeam">
+	<select name="teamSelect" id="teamSelect" ng-model="selectedTeam" ng-change="updateDisplay()">
 		<div >
 			<option ng-repeat="team in teams" ng-value="team.short" >{{team.name}}</option>
 		</div>
 	</select>
 
-	<select name="yearSelect" id="yearSelect" ng-model="selectedYear">
+	<select name="yearSelect" id="yearSelect" ng-model="selectedYear" ng-change="updateDisplay()">
 		<div >
 			<option ng-repeat="year in years" ng-value="year" >{{year}}</option>
 		</div>
