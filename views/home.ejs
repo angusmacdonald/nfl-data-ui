@@ -1,15 +1,20 @@
 <div class="container">
-      
-      <select name="teamSelect" id="teamSelect" ng-model="selectedTeam">
-      <div ng-repeat="team in teams">
-          <option ng-repeat="team in teams" ng-value="team.short" >{{team.name}}</option>
-      </div>
-   
-    </select>
+	<select name="teamSelect" id="teamSelect" ng-model="selectedTeam">
+		<div >
+			<option ng-repeat="team in teams" ng-value="team.short" >{{team.name}}</option>
+		</div>
+	</select>
 
-       <div>
-        {{selectedTeam}}
-      </div>
+	<select name="yearSelect" id="yearSelect" ng-model="selectedYear">
+		<div >
+			<option ng-repeat="year in years" ng-value="year" >{{year}}</option>
+		</div>
+	</select>
 
-      <canvas tc-chartjs chart-type="Spie" chart-data="players" chart-options="options" width="350" height="350"></canvas>
+	<div>
+		Team: {{selectedTeam}}
+		Year: {{selectedYear}}
+	</div>
+
+	<canvas tc-chartjs chart-type="Spie" chart-data="players" chart-options="options" width="350" height="350"></canvas>
 </div> <!-- /container -->

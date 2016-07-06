@@ -41,10 +41,21 @@ app.factory('teams', function() {
     "name": "Dallas Cowboys"
   }]
 
+  return o;
+});
 
+
+app.factory('years', function() {
+
+  var o = {
+    years: []
+  };
+
+  o.years = [ 2010, 2011, 2012, 2014, 2015 ];
 
   return o;
 });
+
 
 
 app.factory('receivers', ['$http',
@@ -68,10 +79,13 @@ app.controller('MainCtrl', [
   '$scope',
   'receivers',
   'teams',
-  function($scope, receivers, teams) {
+  'years',
+  function($scope, receivers, teams, years) {
     $scope.players = receivers.players;
     $scope.teams = teams.teams;
+    $scope.years = years.years;
     $scope.selectedTeam = null;
+    $scope.selectedYear = null;
   }
 ]);
 
@@ -86,7 +100,6 @@ function convertToSpie(receivers, o) {
       totalYards += parseFloat(receiver['YDS']);
     }
   }
-
 
   for (var num in receivers) {
     if (receivers.hasOwnProperty(num)) {
