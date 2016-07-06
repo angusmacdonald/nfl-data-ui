@@ -61,8 +61,8 @@ app.factory('years', function() {
 
 
 
-app.factory('receivers', ['$http',
-  function($http) {
+app.factory('receivers', ['$http', 'teams',
+  function($http, teams) {
 
     var o = {
       players: []
@@ -71,7 +71,7 @@ app.factory('receivers', ['$http',
     o.getReceivers = function(team, year) {
       return $http.get('/receiving/' + team + '/' + year).success(function(receivers) {
         o.players.splice(0,o.players.length) // clear array, keep reference
-        convertToSpie(receivers, o);
+        convertToSpie(receivers, o, teams.teams);
       });
     };
 
@@ -97,7 +97,7 @@ app.controller('MainCtrl', [
   }
 ]);
 
-function convertToSpie(receivers, o) {
+function convertToSpie(receivers, o, teams) {
 
   var totalReceptionNumbers = 0;
   var totalYards = 0;
@@ -122,10 +122,11 @@ function convertToSpie(receivers, o) {
       var percentageYac = Math.min(parseFloat(1), parseFloat(receiver['YAC']) / parseFloat(receiver['YDS']));
       var percentageNonYac = 1.0 - percentageYac;
 
+      var team = _.find(teams, function(obj) { return obj.code == receiver['TEAM'] })
 
       var sliceNonYac = {
         height: chartHeight * percentageNonYac,
-        color: "#203731",
+        color: team['primarycolor'],
         highlight: "#234D42",
         label: Math.max(0, receiver['YDS'] - receiver['YAC']) + " yards in air"
       };
@@ -133,7 +134,7 @@ function convertToSpie(receivers, o) {
 
       var sliceYac = {
         height: chartHeight * percentageYac,
-        color: "#FFB612",
+        color: team['secondarycolor'],
         highlight: "#F0AE1A",
         label: receiver['YAC'] + " yards after catch"
       };
