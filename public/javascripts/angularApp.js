@@ -11,17 +11,17 @@ app.config([
         templateUrl: '/home.html',
         controller: 'MainCtrl',
         resolve: {
-          resolveReceivers: ['receivers',
-            function(receivers) {
-              return receivers.getReceivers("GB", 2015);
-            }
-          ],
+          // Get data on page load:
           resolveTeams: ['teams',
             function(teams) {
               return teams.getTeams();
             }
+          ],
+          resolveReceivers: ['receivers',
+            function(receivers) {
+              return receivers.getReceivers("GB", 2015);
+            }
           ]
-
         }
       });
 
@@ -30,7 +30,9 @@ app.config([
 ]);
 
 
-
+/*
+ * Operations for obtaining team information:
+ */
 app.factory('teams', ['$http',
   function($http) {
 
@@ -47,7 +49,9 @@ app.factory('teams', ['$http',
   return o;
 }]);
 
-
+/**
+ * Operations for obtaining valid years over which to query:
+ */
 app.factory('years', function() {
 
   var o = {
@@ -60,7 +64,9 @@ app.factory('years', function() {
 });
 
 
-
+/**
+ * Operations for receiving receiver information:
+ */
 app.factory('receivers', ['$http', 'teams',
   function($http, teams) {
 
@@ -127,7 +133,7 @@ function convertToSpie(receivers, o, teams) {
       var sliceNonYac = {
         height: chartHeight * percentageNonYac,
         color: team['primarycolor'],
-        highlight: "#234D42",
+        highlight: shadeColor(team['primarycolor'], 0.2),
         label: Math.max(0, receiver['YDS'] - receiver['YAC']) + " yards in air"
       };
 
@@ -135,7 +141,7 @@ function convertToSpie(receivers, o, teams) {
       var sliceYac = {
         height: chartHeight * percentageYac,
         color: team['secondarycolor'],
-        highlight: "#F0AE1A",
+        highlight: shadeColor(team['secondarycolor'], 0.2),
         label: receiver['YAC'] + " yards after catch"
       };
 
@@ -148,4 +154,10 @@ function convertToSpie(receivers, o, teams) {
     }
   }
 
+}
+
+// From http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
+function shadeColor(color, percent) {   
+    var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+    return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
 }
