@@ -1,7 +1,7 @@
 <div class="container">
 	<select name="teamSelect" id="teamSelect" ng-model="selectedTeam" ng-change="updateDisplay()">
 		<div >
-			<option ng-repeat="team in teams" ng-value="team.short" >{{team.name}}</option>
+			<option ng-repeat="team in teams" ng-value="team.code" >{{team.code}}</option>
 		</div>
 	</select>
 
@@ -16,5 +16,5 @@
 		Year: {{selectedYear}}
 	</div>
 
-	<canvas tc-chartjs chart-type="Spie" chart-data="players" chart-options="options" width="350" height="350"></canvas>
+	<canvas tc-chartjs chart-type="Spie" chart-data="players" chart-options="options" ></canvas>
 </div> <!-- /container -->

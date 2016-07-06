@@ -11,11 +11,17 @@ app.config([
         templateUrl: '/home.html',
         controller: 'MainCtrl',
         resolve: {
-          postPromise: ['receivers',
+          resolveReceivers: ['receivers',
             function(receivers) {
               return receivers.getReceivers("GB", 2015);
             }
+          ],
+          resolveTeams: ['teams',
+            function(teams) {
+              return teams.getTeams();
+            }
           ]
+
         }
       });
 
@@ -25,23 +31,21 @@ app.config([
 
 
 
-app.factory('teams', function() {
+app.factory('teams', ['$http',
+  function($http) {
 
   var o = {
     teams: []
   };
 
-  o.teams =
-    [{
-    "short": "GB",
-    "name": "Green Bay Packers"
-  }, {
-    "short": "DAL",
-    "name": "Dallas Cowboys"
-  }]
+  o.getTeams = function() {
+    return $http.get('/teams').success(function(data) {
+      angular.copy(data, o.teams);
+    });
+  };
 
   return o;
-});
+}]);
 
 
 app.factory('years', function() {
@@ -66,7 +70,7 @@ app.factory('receivers', ['$http',
 
     o.getReceivers = function(team, year) {
       return $http.get('/receiving/' + team + '/' + year).success(function(receivers) {
-        o.players.splice(0,o.players.length)
+        o.players.splice(0,o.players.length) // clear array, keep reference
         convertToSpie(receivers, o);
       });
     };

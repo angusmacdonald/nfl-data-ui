@@ -7,10 +7,8 @@ var bodyParser = require('body-parser');
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/nfl');
-require('./models/Posts');
-require('./models/Comments');
 require('./models/Receiving');
-
+require('./models/Teams');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
