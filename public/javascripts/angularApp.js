@@ -96,24 +96,14 @@ app.factory('receivers', ['$http', 'teams',
     };
 
     o.getRequestedReceivers = function(request) {
-      var path = '/receiving';
-      for (i = 0; i < request.length; i++) {
-        path += "/" + request[i].team + "/" + request[i].year;
-        o.display[i].selectedTeam = request[i].team;
-        o.display[i].selectedYear = request[i].year;
-      }
+      var path = createGetRequestPath(request, o.display);
 
       return $http.get(path).success(function(receivers) {
+        // Create spie charts for each of the requested team/date pairs.
+        var maxYards = getMaxYardsReached(request, receivers);
+
         for (i = 0; i < request.length; i++) {
-          var selectedReceivers = _.filter(receivers, function(obj) {
-            return obj['YEAR'] == request[i].year && obj['TEAM'] == request[i].team;
-          })
-
-          displayForYear = o.display[i].receivers;
-
-          displayForYear.splice(0, displayForYear.length) // clear array, keep reference
-          convertToSpie(selectedReceivers, displayForYear, teams.teams);
-
+          createSpie(i, request, receivers, teams, maxYards, o.display[i].receivers);
         }
       });
     };
@@ -136,31 +126,76 @@ app.controller('MainCtrl', [
 
     $scope.updateDisplay = function(chart) {
       // Change the URL, initiating a new request.
-      $state.go('home', { 
+      $state.go('home', {
         teamA: $scope.display[0].selectedTeam,
         yearA: $scope.display[0].selectedYear,
         teamB: $scope.display[1].selectedTeam,
         yearB: $scope.display[1].selectedYear,
         teamC: $scope.display[2].selectedTeam,
         yearC: $scope.display[2].selectedYear
-       });
+      });
     };
   }
 ]);
 
-function convertToSpie(receivers, receiversArray, teams) {
+function createGetRequestPath(request, display) {
+  var path = '/receiving';
+  for (i = 0; i < request.length; i++) {
+    path += "/" + request[i].team + "/" + request[i].year;
+    display[i].selectedTeam = request[i].team;
+    display[i].selectedYear = request[i].year;
+  }
 
+  return path;
+}
+
+function getMaxYardsReached(request, receivers) {
+  var maxYards = 0;
+  for (i = 0; i < request.length; i++) {
+    var selectedReceivers = _.filter(receivers, function(obj) {
+      return obj['YEAR'] == request[i].year && obj['TEAM'] == request[i].team;
+    })
+
+    /*
+     * Calculate total yards and receptions to normalize results against this:
+     */
+    var totalYards = 0;
+
+    for (var num in selectedReceivers) {
+      if (receivers.hasOwnProperty(num)) {
+        var receiver = receivers[num];
+        totalYards += parseFloat(receiver['YDS']);
+      }
+    }
+
+    maxYards = Math.max(maxYards, totalYards);
+  }
+
+  return maxYards;
+
+}
+
+function createSpie(i, request, receivers, teams, maxYards, displayForYear) {
+
+  var selectedReceivers = _.filter(receivers, function(obj) {
+    return obj['YEAR'] == request[i].year && obj['TEAM'] == request[i].team;
+  })
+
+  displayForYear.splice(0, displayForYear.length) // clear array, keep reference
+  convertToSpie(selectedReceivers, displayForYear, teams.teams, maxYards);
+
+}
+
+function convertToSpie(receivers, receiversArray, teams, maxYards) {
   /*
    * Calculate total yards and receptions to normalize results against this:
    */
   var totalReceptionNumbers = 0;
-  var totalYards = 0;
 
   for (var num in receivers) {
     if (receivers.hasOwnProperty(num)) {
       var receiver = receivers[num];
       totalReceptionNumbers += parseFloat(receiver['REC']);
-      totalYards += parseFloat(receiver['YDS']);
     }
   }
 
@@ -174,7 +209,7 @@ function convertToSpie(receivers, receiversArray, teams) {
       var Rwidth = (receiver['REC'] / parseFloat(totalReceptionNumbers)) * 100;
       var Rlabel = receiver['PLAYER'];
 
-      var chartHeight = Math.max(parseFloat(10), ((receiver['YDS'] / parseFloat(totalYards)) * 100) * 2);
+      var chartHeight = Math.max(parseFloat(10), ((receiver['YDS'] / parseFloat(maxYards)) * 100) * 2);
 
       var percentageYac = Math.min(parseFloat(1), parseFloat(receiver['YAC']) / parseFloat(receiver['YDS']));
       var percentageNonYac = 1.0 - percentageYac;
