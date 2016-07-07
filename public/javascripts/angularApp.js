@@ -149,6 +149,12 @@ function createGetRequestPath(request, display) {
   return path;
 }
 
+/**
+ * For each of the team/year pairs in the request, get the number of total team yards 
+ * for the team that had most team yards that year.
+ * @param  array request   The array of team-year pairs.
+ * @param  array receivers Array of all receivers on those team-years.
+ */
 function getMaxYardsReached(request, receivers) {
   var maxYards = 0;
   for (i = 0; i < request.length; i++) {
@@ -191,11 +197,13 @@ function convertToSpie(receivers, receiversArray, teams, maxYards) {
    * Calculate total yards and receptions to normalize results against this:
    */
   var totalReceptionNumbers = 0;
+  var totalYards = 0;
 
   for (var num in receivers) {
     if (receivers.hasOwnProperty(num)) {
       var receiver = receivers[num];
       totalReceptionNumbers += parseFloat(receiver['REC']);
+      totalYards += parseFloat(receiver['YDS']);
     }
   }
 
@@ -220,15 +228,16 @@ function convertToSpie(receivers, receiversArray, teams, maxYards) {
       var primaryColor = team['primarycolor'] === undefined ? "#FFFFFF" : team['primarycolor'];
       var secondaryColor = team['secondarycolor'] === undefined ? "000000" : team['secondarycolor'];
 
+      var maxPlayerHeight = (totalYards / maxYards) * 0.8; // make height relative to total max.
       var sliceNonYac = {
-        height: chartHeight * percentageNonYac,
+        height: chartHeight * percentageNonYac * maxPlayerHeight,
         color: primaryColor,
         highlight: shadeColor(primaryColor, 0.2),
         label: Math.max(0, receiver['YDS'] - receiver['YAC']) + " yards in air"
       };
 
       var sliceYac = {
-        height: chartHeight * percentageYac,
+        height: chartHeight * percentageYac * maxPlayerHeight,
         color: secondaryColor,
         highlight: shadeColor(secondaryColor, 0.2),
         label: receiver['YAC'] + " yards after catch"
