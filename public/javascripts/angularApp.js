@@ -19,7 +19,7 @@ app.config([
           ],
           resolveReceivers: ['receivers',
             function(receivers) {
-              return receivers.getReceiversInit("GB", 2013, 2015);
+              return receivers.getRecieversRange("GB", 2013, 2015);
             }
           ]
         }
@@ -85,6 +85,10 @@ app.factory('receivers', ['$http', 'teams',
       }, ]
     };
 
+    /*
+     * Get all reception stats for receivers on a given team in the given year.
+     * The receivers array specifies where the data will be added to.
+     */
     o.getReceivers = function(team, year, receiversArray) {
       return $http.get('/receiving/' + team + '/' + year).success(function(receivers) {
         receiversArray.splice(0, receiversArray.length) // clear array, keep reference
@@ -92,7 +96,14 @@ app.factory('receivers', ['$http', 'teams',
       });
     };
 
-    o.getReceiversInit = function(team, startYear, endYear) {
+    /**
+     * Get all reception stats for receivers on a given team in the given year range (inclusive).
+     * Data is added to the appropriate display object.
+     * @param  string   team      Short code for the team
+     * @param  string   startYear Start year, inclusive.
+     * @param  string   endYear   End year, inclusive.
+     */
+    o.getRecieversRange = function(team, startYear, endYear) {
 
       var path = '/receiving/' + team + '/' + startYear + '/' + endYear;
 
