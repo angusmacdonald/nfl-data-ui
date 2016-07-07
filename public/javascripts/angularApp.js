@@ -7,7 +7,7 @@ app.config([
 
     $stateProvider
       .state('home', {
-        url: '/home/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC',
+        url: '/receiving/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC',
         templateUrl: '/home.html',
         controller: 'MainCtrl',
         resolve: {
@@ -35,7 +35,7 @@ app.config([
         }
       });
 
-    $urlRouterProvider.otherwise('home/GB/2013/GB/2014/GB/2015');
+    $urlRouterProvider.otherwise('receiving/GB/2013/GB/2014/GB/2015');
   }
 ]);
 
@@ -163,17 +163,26 @@ app.factory('receivers', ['$http', 'teams',
 
 app.controller('MainCtrl', [
   '$scope',
+  '$state',
   'receivers',
   'teams',
   'years',
-  function($scope, receivers, teams, years) {
+  function($scope, $state, receivers, teams, years) {
     $scope.teams = teams.teams;
     $scope.years = years.years;
 
     $scope.display = receivers.display;
 
     $scope.updateDisplay = function(chart) {
-      receivers.getReceivers(chart.selectedTeam, chart.selectedYear, chart.receivers);
+      // Change the URL, initiating a new request.
+      $state.go('home', { 
+        teamA: $scope.display[0].selectedTeam,
+        yearA: $scope.display[0].selectedYear,
+        teamB: $scope.display[1].selectedTeam,
+        yearB: $scope.display[1].selectedYear,
+        teamC: $scope.display[2].selectedTeam,
+        yearC: $scope.display[2].selectedYear
+       });
     };
   }
 ]);
