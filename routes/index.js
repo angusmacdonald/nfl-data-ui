@@ -12,31 +12,6 @@ var mongoose = require('mongoose');
 var Receiving = mongoose.model('Receiving');
 var Team = mongoose.model('Team');
 
-
-router.get('/receiving/:team/:year', function(req, res, next) {
-  Receiving.
-  find({
-    TEAM: req.params['team'],
-    YEAR: req.params['year']
-  }).exec(function(err, receiving){
-    if(err){ return next(err); }
-
-    res.json(receiving);
-  });
-});
-
-router.get('/receiving/:team/:start/:end', function(req, res, next) {
-  Receiving.
-  find({
-    TEAM: req.params['team'],
-    YEAR: { $gt: req.params['start']-1, $lt: req.params['end']+1 }
-  }).exec(function(err, receiving){
-    if(err){ return next(err); }
-
-    res.json(receiving);
-  });
-});
-
 router.get('/receiving/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC', function(req, res, next) {
   Receiving.
   find({  $or: [
@@ -52,8 +27,6 @@ router.get('/receiving/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC', function(req,
   });
 });
 
-
-
 router.get('/teams', function(req, res, next) {
   Team.
   find({}).exec(function(err, team){
@@ -62,4 +35,3 @@ router.get('/teams', function(req, res, next) {
     res.json(team);
   });
 });
-

@@ -95,45 +95,6 @@ app.factory('receivers', ['$http', 'teams',
       }, ]
     };
 
-    /*
-     * Get all reception stats for receivers on a given team in the given year.
-     * The receivers array specifies where the data will be added to.
-     */
-    o.getReceivers = function(team, year, receiversArray) {
-      return $http.get('/receiving/' + team + '/' + year).success(function(receivers) {
-        receiversArray.splice(0, receiversArray.length) // clear array, keep reference
-        convertToSpie(receivers, receiversArray, teams.teams);
-      });
-    };
-
-    /**
-     * Get all reception stats for receivers on a given team in the given year range (inclusive).
-     * Data is added to the appropriate display object.
-     * @param  string   team      Short code for the team
-     * @param  string   startYear Start year, inclusive.
-     * @param  string   endYear   End year, inclusive.
-     */
-    o.getRecieversRange = function(team, startYear, endYear) {
-
-      var path = '/receiving/' + team + '/' + startYear + '/' + endYear;
-
-      return $http.get(path).success(function(receivers) {
-        for (i = startYear; i <= endYear; i++) {
-          var receiversForYear = _.filter(receivers, function(obj) {
-            return obj['YEAR'] == i;
-          })
-
-          displayForYear = o.display[i - startYear].receivers;
-
-
-          displayForYear.splice(0, displayForYear.length) // clear array, keep reference
-          convertToSpie(receiversForYear, displayForYear, teams.teams);
-
-        }
-      });
-    };
-
-
     o.getRequestedReceivers = function(request) {
       var path = '/receiving';
       for (i = 0; i < request.length; i++) {
