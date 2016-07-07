@@ -1,4 +1,4 @@
-var app = angular.module('nflStats', ['ui.router', 'tc.chartjs']);
+var app = angular.module('nflStats', ['ui.router', 'tc.chartjs', 'ngStorage']);
 
 app.config([
   '$stateProvider',
@@ -76,8 +76,8 @@ app.factory('years', function() {
 /**
  * Operations for receiving receiver information:
  */
-app.factory('receivers', ['$http', 'teams',
-  function($http, teams) {
+app.factory('receivers', ['$http', 'teams', '$localStorage',
+  function($http, teams, $localStorage) {
 
     var o = {
       display: [{
@@ -228,7 +228,7 @@ function convertToSpie(receivers, receiversArray, teams, maxYards) {
       var primaryColor = team['primarycolor'] === undefined ? "#FFFFFF" : team['primarycolor'];
       var secondaryColor = team['secondarycolor'] === undefined ? "000000" : team['secondarycolor'];
 
-      var maxPlayerHeight = (totalYards / maxYards) * 0.8; // make height relative to total max.
+      var maxPlayerHeight = totalYards / maxYards; // make height relative to total max.
       var sliceNonYac = {
         height: chartHeight * percentageNonYac * maxPlayerHeight,
         color: primaryColor,
