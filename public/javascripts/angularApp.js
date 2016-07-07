@@ -7,7 +7,7 @@ app.config([
 
     $stateProvider
       .state('home', {
-        url: '/home',
+        url: '/home/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC',
         templateUrl: '/home.html',
         controller: 'MainCtrl',
         resolve: {
@@ -17,15 +17,25 @@ app.config([
               return teams.getTeams();
             }
           ],
-          resolveReceivers: ['receivers',
-            function(receivers) {
-              return receivers.getRecieversRange("GB", 2013, 2015);
+          resolveReceivers: ['$stateParams', 'receivers',
+            function($stateParams, receivers) {
+              request = [{
+                team: $stateParams['teamA'],
+                year: $stateParams['yearA']
+              }, {
+                team: $stateParams['teamB'],
+                year: $stateParams['yearB']
+              }, {
+                team: $stateParams['teamC'],
+                year: $stateParams['yearC']
+              }, ];
+              return receivers.getRequestedReceivers(request);
             }
           ]
         }
       });
 
-    $urlRouterProvider.otherwise('home');
+    $urlRouterProvider.otherwise('home/GB/2013/GB/2014/GB/2015');
   }
 ]);
 
@@ -118,6 +128,30 @@ app.factory('receivers', ['$http', 'teams',
 
           displayForYear.splice(0, displayForYear.length) // clear array, keep reference
           convertToSpie(receiversForYear, displayForYear, teams.teams);
+
+        }
+      });
+    };
+
+
+    o.getRequestedReceivers = function(request) {
+      var path = '/receiving';
+      for (i = 0; i < request.length; i++) {
+        path += "/" + request[i].team + "/" + request[i].year;
+        o.display[i].selectedTeam = request[i].team;
+        o.display[i].selectedYear = request[i].year;
+      }
+
+      return $http.get(path).success(function(receivers) {
+        for (i = 0; i < request.length; i++) {
+          var selectedReceivers = _.filter(receivers, function(obj) {
+            return obj['YEAR'] == request[i].year && obj['TEAM'] == request[i].team;
+          })
+
+          displayForYear = o.display[i].receivers;
+
+          displayForYear.splice(0, displayForYear.length) // clear array, keep reference
+          convertToSpie(selectedReceivers, displayForYear, teams.teams);
 
         }
       });

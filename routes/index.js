@@ -37,6 +37,22 @@ router.get('/receiving/:team/:start/:end', function(req, res, next) {
   });
 });
 
+router.get('/receiving/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC', function(req, res, next) {
+  Receiving.
+  find({  $or: [
+                { 'TEAM': req.params['teamA'], 'YEAR': req.params['yearA'] },
+                { 'TEAM': req.params['teamB'], 'YEAR': req.params['yearB'] },
+                { 'TEAM': req.params['teamC'], 'YEAR': req.params['yearC'] }
+            ]}
+            ).
+  exec(function(err, receiving){
+    if(err){ return next(err); }
+
+    res.json(receiving);
+  });
+});
+
+
 
 router.get('/teams', function(req, res, next) {
   Team.
