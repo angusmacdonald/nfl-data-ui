@@ -19,7 +19,7 @@ app.config([
           ],
           resolveReceivers: ['receivers',
             function(receivers) {
-              return receivers.getReceivers("GB", 2015);
+              return receivers.getReceivers("GB", 2015, []);
             }
           ]
         }
@@ -55,10 +55,8 @@ app.factory('teams', ['$http',
 app.factory('years', function() {
 
   var o = {
-    years: []
+    years: [ 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 ]
   };
-
-  o.years = [ 2010, 2011, 2012, 2014, 2015 ];
 
   return o;
 });
@@ -71,13 +69,23 @@ app.factory('receivers', ['$http', 'teams',
   function($http, teams) {
 
     var o = {
-      players: []
+      display: [
+      { selectedTeam: "GB",
+        selectedYear: 2013,
+        receivers: [] },
+        { selectedTeam: "GB",
+        selectedYear: 2014,
+        receivers: []  },
+        { selectedTeam: "GB",
+        selectedYear: 2015,
+        receivers: []  },
+    ]
     };
 
-    o.getReceivers = function(team, year) {
+    o.getReceivers = function(team, year, receiversArray) {
       return $http.get('/receiving/' + team + '/' + year).success(function(receivers) {
-        o.players.splice(0,o.players.length) // clear array, keep reference
-        convertToSpie(receivers, o, teams.teams);
+        receiversArray.splice(0,receiversArray.length) // clear array, keep reference
+        convertToSpie(receivers, receiversArray, teams.teams);
       });
     };
 
@@ -91,19 +99,18 @@ app.controller('MainCtrl', [
   'teams',
   'years',
   function($scope, receivers, teams, years) {
-    $scope.players = receivers.players;
     $scope.teams = teams.teams;
     $scope.years = years.years;
-    $scope.selectedTeam = "GB";
-    $scope.selectedYear = 2015;
 
-    $scope.updateDisplay = function() {
-      receivers.getReceivers($scope.selectedTeam, $scope.selectedYear);
+    $scope.display = receivers.display;
+
+    $scope.updateDisplay = function(chart) {
+      receivers.getReceivers(chart.selectedTeam, chart.selectedYear, chart.receivers);
     };
   }
 ]);
 
-function convertToSpie(receivers, o, teams) {
+function convertToSpie(receivers, receiversArray, teams) {
 
   /*
    * Calculate total yards and receptions to normalize results against this:
@@ -153,7 +160,7 @@ function convertToSpie(receivers, o, teams) {
       };
 
       // Create new player info and add it to the results array:
-      o.players.push({
+      receiversArray.push({
         width: Rwidth,
         label: Rlabel,
         slices: [sliceYac, sliceNonYac]

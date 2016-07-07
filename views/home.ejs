@@ -10,59 +10,19 @@
 	<p>The following spie charts show receiving yards per wide receiver, with YAC indicated by the outer slice on each segment. The width of each segment is based on the relative number of receptions, the length of each segment is based on the relative number of receiving yards.</p>
 
 	<div class="row">
-		<div class="col-md-4">
+		<div ng-repeat="chart in display" class="col-md-4">
 			<div id="canvas-holder" style="width:100%">
-				<canvas tc-chartjs chart-type="Spie" chart-data="players" chart-options="options" ></canvas>
+				<canvas tc-chartjs chart-type="Spie" chart-data="chart.receivers" chart-options="options" ></canvas>
 			</div>
-			<div style="text-align: center;">
+			<div  style="text-align: center;">
 
-				<select name="teamSelect" id="teamSelect" ng-model="selectedTeam" ng-change="updateDisplay()">
+				<select name="teamSelectA" id="teamSelectA" ng-model="chart.selectedTeam" ng-change="updateDisplay(chart)">
 					<div>
 						<option ng-repeat="team in teams" ng-value="team.code" >{{team.code}}</option>
 					</div>
 				</select>
 
-				<select name="yearSelect" id="yearSelect" ng-model="selectedYear" ng-change="updateDisplay()">
-					<div >
-						<option ng-repeat="year in years" ng-value="year" >{{year}}</option>
-					</div>
-				</select>
-
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div id="canvas-holder" style="width:100%">
-				<canvas tc-chartjs chart-type="Spie" chart-data="players" chart-options="options" ></canvas>
-			</div>
-			<div style="text-align: center;">
-
-				<select name="teamSelect" id="teamSelect" ng-model="selectedTeam" ng-change="updateDisplay()">
-					<div>
-						<option ng-repeat="team in teams" ng-value="team.code" >{{team.code}}</option>
-					</div>
-				</select>
-
-				<select name="yearSelect" id="yearSelect" ng-model="selectedYear" ng-change="updateDisplay()">
-					<div >
-						<option ng-repeat="year in years" ng-value="year" >{{year}}</option>
-					</div>
-				</select>
-
-			</div>
-		</div>
-		<div class="col-md-4">
-			<div id="canvas-holder" style="width:100%">
-				<canvas tc-chartjs chart-type="Spie" chart-data="players" chart-options="options" ></canvas>
-			</div>
-			<div style="text-align: center;">
-
-				<select name="teamSelect" id="teamSelect" ng-model="selectedTeam" ng-change="updateDisplay()">
-					<div>
-						<option ng-repeat="team in teams" ng-value="team.code" >{{team.code}}</option>
-					</div>
-				</select>
-
-				<select name="yearSelect" id="yearSelect" ng-model="selectedYear" ng-change="updateDisplay()">
+				<select name="yearSelectA" id="yearSelectA" ng-model="chart.selectedYear" ng-change="updateDisplay(chart)">
 					<div >
 						<option ng-repeat="year in years" ng-value="year" >{{year}}</option>
 					</div>
@@ -75,7 +35,8 @@
 
 	<h3>Notes</h3>
 	<p class="text-warning">It's hard to visualize YAC for running backs, because the stats produced by various outlets always shows a much higher YAC than the number of receptions. I'm not entirely sure why this is, but it means that this visualization shows all running back yards as consisting entirely of YAC.</p>
-	<p class="text-warning">The data is from receiving stats, so if a player was traded half-way through a season they are not included (the data would mark their team as GB/BUF, for example, making it impossible to tell where the yards were produced.</p>
+	<p class="text-warning">The data is from receiving stats, so if a player was traded half-way through a season they are not included (the data would mark their team as GB/BUF, for example, making it impossible to tell where the yards were produced).</p>
+	<p class="text-warning">I couldn't find recorded YAC stats prior to 2006, hence the data stopping there.</p>
 
 	<hr>
 
