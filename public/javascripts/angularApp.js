@@ -105,6 +105,9 @@ app.controller('MainCtrl', [
 
 function convertToSpie(receivers, o, teams) {
 
+  /*
+   * Calculate total yards and receptions to normalize results against this:
+   */
   var totalReceptionNumbers = 0;
   var totalYards = 0;
 
@@ -116,6 +119,9 @@ function convertToSpie(receivers, o, teams) {
     }
   }
 
+  /*
+   * For each receiver, create a player object representing the state required by the spie chart.
+   */
   for (var num in receivers) {
     if (receivers.hasOwnProperty(num)) {
       var receiver = receivers[num];
@@ -129,23 +135,24 @@ function convertToSpie(receivers, o, teams) {
       var percentageNonYac = 1.0 - percentageYac;
 
       var team = _.find(teams, function(obj) { return obj.code == receiver['TEAM'] })
+      var primaryColor = team['primarycolor'] === undefined? "#FFFFFF": team['primarycolor'];
+      var secondaryColor = team['secondarycolor'] === undefined? "000000": team['secondarycolor'];
 
       var sliceNonYac = {
         height: chartHeight * percentageNonYac,
-        color: team['primarycolor'],
-        highlight: shadeColor(team['primarycolor'], 0.2),
+        color: primaryColor,
+        highlight: shadeColor(primaryColor, 0.2),
         label: Math.max(0, receiver['YDS'] - receiver['YAC']) + " yards in air"
       };
 
-
       var sliceYac = {
         height: chartHeight * percentageYac,
-        color: team['secondarycolor'],
-        highlight: shadeColor(team['secondarycolor'], 0.2),
+        color: secondaryColor,
+        highlight: shadeColor(secondaryColor, 0.2),
         label: receiver['YAC'] + " yards after catch"
       };
 
-
+      // Create new player info and add it to the results array:
       o.players.push({
         width: Rwidth,
         label: Rlabel,

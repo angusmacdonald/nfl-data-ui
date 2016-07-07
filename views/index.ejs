@@ -6,41 +6,30 @@
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.js"></script>
 
-<script src="/javascripts/underscore-min.js"></script>
- 
-    <script src="/javascripts/Chart.min.js"></script>
- 
+  <script src="/javascripts/underscore-min.js"></script>
+  
+  <script src="/javascripts/Chart.min.js"></script>
+  
   <script src="/javascripts/angularApp.js"></script>
-<script src="/javascripts/tc.chart.js"></script>
- 
+  <script src="/javascripts/tc.chart.js"></script>
+  
 
   <style> .glyphicon-thumbs-up { cursor:pointer } </style>
 
+  <script src="http://code.jquery.com/jquery-1.5.js"></script>
 
-    <script src="http://code.jquery.com/jquery-1.5.js"></script>
-
-
-    <script src="/javascripts/load-spie.js"></script>
-
-
-        
-    <!-- Custom styles for this template -->
-    <link href="stylesheets/grid.css" rel="stylesheet">
+  <link href="stylesheets/grid.css" rel="stylesheet">
 
 </head>
 <body ng-app="nflStats" ng-controller="MainCtrl">
 
-<div class="row">
-    <div class="col-md-6 col-md-offset-3">
-      <ui-view></ui-view>
-    </div>
-  </div>
+  <ui-view></ui-view>
 
-<script type="text/ng-template" id="/home.html">
-	<% include home.ejs %>
-</script>
+  <script type="text/ng-template" id="/home.html">
+   <% include home.ejs %>
+ </script>
 
-<script type="text/ng-template" id="/posts.html">
+ <script type="text/ng-template" id="/posts.html">
   <% include posts.ejs %>
 </script>
 
