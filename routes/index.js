@@ -25,6 +25,18 @@ router.get('/receiving/:team/:year', function(req, res, next) {
   });
 });
 
+router.get('/receiving/:team/:start/:end', function(req, res, next) {
+  Receiving.
+  find({
+    TEAM: req.params['team'],
+    YEAR: { $gt: req.params['start']-1, $lt: req.params['end']+1 }
+  }).exec(function(err, receiving){
+    if(err){ return next(err); }
+
+    res.json(receiving);
+  });
+});
+
 
 router.get('/teams', function(req, res, next) {
   Team.

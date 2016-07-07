@@ -19,7 +19,7 @@ app.config([
           ],
           resolveReceivers: ['receivers',
             function(receivers) {
-              return receivers.getReceivers("GB", 2015, []);
+              return receivers.getReceiversInit("GB", 2013, 2015);
             }
           ]
         }
@@ -36,18 +36,19 @@ app.config([
 app.factory('teams', ['$http',
   function($http) {
 
-  var o = {
-    teams: []
-  };
+    var o = {
+      teams: []
+    };
 
-  o.getTeams = function() {
-    return $http.get('/teams').success(function(data) {
-      angular.copy(data, o.teams);
-    });
-  };
+    o.getTeams = function() {
+      return $http.get('/teams').success(function(data) {
+        angular.copy(data, o.teams);
+      });
+    };
 
-  return o;
-}]);
+    return o;
+  }
+]);
 
 /**
  * Operations for obtaining valid years over which to query:
@@ -55,7 +56,7 @@ app.factory('teams', ['$http',
 app.factory('years', function() {
 
   var o = {
-    years: [ 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 ]
+    years: [2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015]
   };
 
   return o;
@@ -69,23 +70,45 @@ app.factory('receivers', ['$http', 'teams',
   function($http, teams) {
 
     var o = {
-      display: [
-      { selectedTeam: "GB",
+      display: [{
+        selectedTeam: "GB",
         selectedYear: 2013,
-        receivers: [] },
-        { selectedTeam: "GB",
+        receivers: []
+      }, {
+        selectedTeam: "GB",
         selectedYear: 2014,
-        receivers: []  },
-        { selectedTeam: "GB",
+        receivers: []
+      }, {
+        selectedTeam: "GB",
         selectedYear: 2015,
-        receivers: []  },
-    ]
+        receivers: []
+      }, ]
     };
 
     o.getReceivers = function(team, year, receiversArray) {
       return $http.get('/receiving/' + team + '/' + year).success(function(receivers) {
-        receiversArray.splice(0,receiversArray.length) // clear array, keep reference
+        receiversArray.splice(0, receiversArray.length) // clear array, keep reference
         convertToSpie(receivers, receiversArray, teams.teams);
+      });
+    };
+
+    o.getReceiversInit = function(team, startYear, endYear) {
+
+      var path = '/receiving/' + team + '/' + startYear + '/' + endYear;
+
+      return $http.get(path).success(function(receivers) {
+        for (i = startYear; i <= endYear; i++) {
+          var receiversForYear = _.filter(receivers, function(obj) {
+            return obj['YEAR'] == i;
+          })
+
+          displayForYear = o.display[i - startYear].receivers;
+
+
+          displayForYear.splice(0, displayForYear.length) // clear array, keep reference
+          convertToSpie(receiversForYear, displayForYear, teams.teams);
+
+        }
       });
     };
 
@@ -141,9 +164,11 @@ function convertToSpie(receivers, receiversArray, teams) {
       var percentageYac = Math.min(parseFloat(1), parseFloat(receiver['YAC']) / parseFloat(receiver['YDS']));
       var percentageNonYac = 1.0 - percentageYac;
 
-      var team = _.find(teams, function(obj) { return obj.code == receiver['TEAM'] })
-      var primaryColor = team['primarycolor'] === undefined? "#FFFFFF": team['primarycolor'];
-      var secondaryColor = team['secondarycolor'] === undefined? "000000": team['secondarycolor'];
+      var team = _.find(teams, function(obj) {
+        return obj.code == receiver['TEAM']
+      })
+      var primaryColor = team['primarycolor'] === undefined ? "#FFFFFF" : team['primarycolor'];
+      var secondaryColor = team['secondarycolor'] === undefined ? "000000" : team['secondarycolor'];
 
       var sliceNonYac = {
         height: chartHeight * percentageNonYac,
@@ -171,7 +196,12 @@ function convertToSpie(receivers, receiversArray, teams) {
 }
 
 // From http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
-function shadeColor(color, percent) {   
-    var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
-    return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
+function shadeColor(color, percent) {
+  var f = parseInt(color.slice(1), 16),
+    t = percent < 0 ? 0 : 255,
+    p = percent < 0 ? percent * -1 : percent,
+    R = f >> 16,
+    G = f >> 8 & 0x00FF,
+    B = f & 0x0000FF;
+  return "#" + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
 }
