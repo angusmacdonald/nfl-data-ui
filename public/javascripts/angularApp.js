@@ -8,6 +8,7 @@ app.config([
     $stateProvider
       .state('home', {
         url: '/receiving/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC',
+
         templateUrl: '/home.html',
         controller: 'MainCtrl',
         resolve: {

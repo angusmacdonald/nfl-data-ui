@@ -14,7 +14,7 @@ var routes = require('./routes/index');
 
 var app = express();
 
-app.disable('etag');
+app.disable('etag'); // disables caching of API calls -- remove for production.
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
