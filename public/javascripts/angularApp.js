@@ -7,7 +7,7 @@ app.config([
 
     $stateProvider
       .state('home', {
-        url: '/receiving/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC',
+        url: '/nfl/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC',
 
         templateUrl: '/home.html',
         controller: 'MainCtrl',
@@ -36,7 +36,7 @@ app.config([
         }
       });
 
-    $urlRouterProvider.otherwise('receiving/GB/2013/GB/2014/GB/2015');
+    $urlRouterProvider.otherwise('nfl/GB/2013/GB/2014/GB/2015');
   }
 ]);
 

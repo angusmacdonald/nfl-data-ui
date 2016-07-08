@@ -12,6 +12,10 @@ var mongoose = require('mongoose');
 var Receiving = mongoose.model('Receiving');
 var Team = mongoose.model('Team');
 
+/**
+ * Call to make a database request for receiving data for betwen 1 and 3 team-year pairs.
+ * If less than 3 are used, the request params are undefined and don't affect the result of the query.
+ */
 router.get('/receptions/:teamA/:yearA/:teamB?/:yearB?/:teamC?/:yearC?', function(req, res, next) {
   Receiving.
   find({  $or: [
