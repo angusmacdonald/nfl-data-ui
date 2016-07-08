@@ -140,7 +140,7 @@ app.controller('MainCtrl', [
 ]);
 
 function createGetRequestPath(request, display) {
-  var path = '/receiving';
+  var path = '/receptions';
   for (i = 0; i < request.length; i++) {
     path += "/" + request[i].team + "/" + request[i].year;
     display[i].selectedTeam = request[i].team;

@@ -12,7 +12,7 @@ var mongoose = require('mongoose');
 var Receiving = mongoose.model('Receiving');
 var Team = mongoose.model('Team');
 
-router.get('/receiving/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC', function(req, res, next) {
+router.get('/receptions/:teamA/:yearA/:teamB?/:yearB?/:teamC?/:yearC?', function(req, res, next) {
   Receiving.
   find({  $or: [
                 { 'TEAM': req.params['teamA'], 'YEAR': req.params['yearA'] },

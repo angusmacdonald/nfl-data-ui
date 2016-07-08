@@ -13,7 +13,7 @@
 		<div ng-repeat="chart in display" class="col-md-4">
 			<div id="canvas-holder" style="width:100%">
 				<canvas tc-chartjs chart-type="Spie" chart-data="chart.receivers" chart-options="options" ></canvas>
-			</div>
+			</div> 
 			<div  style="text-align: center;">
 
 				<select name="teamSelectA" id="teamSelectA" ng-model="chart.selectedTeam" ng-change="updateDisplay(chart)">
