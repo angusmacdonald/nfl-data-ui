@@ -189,7 +189,7 @@ app.controller('MainCtrl', [
 
     $scope.updateDisplay = function(chart) {
       // Change the URL, initiating a new request.
-      var nextState = 'home.' + $scope.display.length;
+      var nextState = 'home' + (($scope.display.length > 1) ? "." + $scope.display.length: "");
 
       // Create query parameters from all defined team-year pairs:
       var params = {};
