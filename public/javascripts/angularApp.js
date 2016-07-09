@@ -7,11 +7,28 @@ app.config([
 
     $stateProvider
       .state('home', {
-        url: '/nfl/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC',
+        url: '/nfl/:teamA/:yearA',
         templateUrl: '/home.html',
         controller: 'MainCtrl',
-        resolve: {
-          // Get data on page load:
+        resolve: { // Get data on page load:
+          resolveTeams: ['teams', resolveTeamsRequest],
+          resolveReceivers: ['$stateParams', 'receivers', resolveReceiversRequest]
+        }
+      })
+      .state('home.2', {
+        url: '^/nfl/:teamA/:yearA/:teamB/:yearB',
+        templateUrl: '/home.html',
+        controller: 'MainCtrl',
+        resolve: { // Get data on page load:
+          resolveTeams: ['teams', resolveTeamsRequest],
+          resolveReceivers: ['$stateParams', 'receivers', resolveReceiversRequest]
+        }
+      })
+      .state('home.3', {
+        url: '^/nfl/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC',
+        templateUrl: '/home.html',
+        controller: 'MainCtrl',
+        resolve: { // Get data on page load:
           resolveTeams: ['teams', resolveTeamsRequest],
           resolveReceivers: ['$stateParams', 'receivers', resolveReceiversRequest]
         }
@@ -131,10 +148,18 @@ app.controller('MainCtrl', [
 
     $scope.updateDisplay = function(chart) {
       // Change the URL, initiating a new request.
-      $state.go('home', {
-        teamA: $scope.display[0].selectedTeam,
-        yearA: $scope.display[0].selectedYear
-      });
+      var nextState = 'home.' + $scope.display.length;
+
+      // Create query parameters from all defined team-year pairs:
+      var params = {};
+
+      for (i = 0; i < $scope.display.length; i++){
+        var letter = String.fromCharCode(65 + i);
+        params['team' + letter] = $scope.display[i].selectedTeam;
+        params['year' + letter] = $scope.display[i].selectedYear;
+      }
+
+      $state.go(nextState, params);
     };
   }
 ]);
