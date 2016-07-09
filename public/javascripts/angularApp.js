@@ -3,7 +3,10 @@ var app = angular.module('nflStats', ['ui.router', 'tc.chartjs', 'ngStorage']);
 app.config([
   '$stateProvider',
   '$urlRouterProvider',
-  function($stateProvider, $urlRouterProvider) {
+  '$localStorageProvider',
+  function($stateProvider, $urlRouterProvider, $localStorageProvider) {
+    // Set a prefix for local storage, so we store in a unique location:
+    $localStorageProvider.setKeyPrefix('nyc.angus.nfl');
 
     $stateProvider
       .state('home', {
@@ -69,17 +72,24 @@ function resolveReceiversRequest($stateParams, receivers) {
 /*
  * Operations for obtaining team information:
  */
-app.factory('teams', ['$http',
-  function($http) {
+app.factory('teams', ['$http', '$localStorage',
+  function($http, $localStorage) {
 
     var o = {
       teams: []
     };
 
     o.getTeams = function() {
-      return $http.get('/teams').success(function(data) {
-        angular.copy(data, o.teams);
-      });
+      if ($localStorage.teams === undefined) {
+        return $http.get('/teams').success(function(data) {
+          $localStorage.teams = [];
+          angular.copy(data, $localStorage.teams);
+          angular.copy(data, o.teams);
+        });
+      } else {
+        o.teams = $localStorage['teams'];
+      }
+      return o;
     };
 
     return o;
@@ -153,7 +163,7 @@ app.controller('MainCtrl', [
       // Create query parameters from all defined team-year pairs:
       var params = {};
 
-      for (i = 0; i < $scope.display.length; i++){
+      for (i = 0; i < $scope.display.length; i++) {
         var letter = String.fromCharCode(65 + i);
         params['team' + letter] = $scope.display[i].selectedTeam;
         params['year' + letter] = $scope.display[i].selectedYear;
