@@ -67,6 +67,3 @@ function resolveReceiversRequest($stateParams, receivers) {
 
   return receivers.getRequestedReceivers(request);
 }
-
-
-

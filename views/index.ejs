@@ -1,38 +1,37 @@
 <html>
-<head>
-  <title>NFL Stats</title>
-  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+  <head>
+    <title>NFL Stats</title>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.0-beta.1/angular-ui-router.min.js"></script>
+    <!-- Main Angular Files -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.0-beta.1/angular-ui-router.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.5.js"></script>
 
-  <script src="/javascripts/underscore-min.js"></script>
-  
-  <script src="/javascripts/Chart.min.js"></script>
-  
-  <script src="/javascripts/ngStorage.min.js"></script>
-  <script src="/javascripts/angularApp.js"></script>
-  <script src="/javascripts/controllers/main.js"></script>
-  <script src="/javascripts/factories/teams.js"></script>
-  <script src="/javascripts/factories/receivers.js"></script>
-  <script src="/javascripts/factories/years.js"></script>
-  <script src="/javascripts/tc.chart.js"></script>
-  
+    <!-- Required utilities -->
+    <script src="/javascripts/util/tc.chart.js"></script>
+    <script src="/javascripts/util/underscore-min.js"></script>
+    <script src="/javascripts/util/Chart.min.js"></script>
+    <script src="/javascripts/util/ngStorage.min.js"></script>
+    
+    <!-- Application Files -->
+    <script src="/javascripts/angularApp.js"></script>
+    <script src="/javascripts/controllers/main.js"></script>
+    <script src="/javascripts/factories/teams.js"></script>
+    <script src="/javascripts/factories/receivers.js"></script>
+    <script src="/javascripts/factories/years.js"></script>
+    
+    <!-- Stylesheets -->
+    <style> .glyphicon-thumbs-up { cursor:pointer } </style>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/grid.css" rel="stylesheet">
+  </head>
 
-  <style> .glyphicon-thumbs-up { cursor:pointer } </style>
+  <body ng-app="nflStats" ng-controller="MainCtrl">
 
-  <script src="http://code.jquery.com/jquery-1.5.js"></script>
+    <ui-view></ui-view>
 
-  <link href="stylesheets/grid.css" rel="stylesheet">
-
-</head>
-<body ng-app="nflStats" ng-controller="MainCtrl">
-
-  <ui-view></ui-view>
-
-  <script type="text/ng-template" id="/home.html">
-   <% include home.ejs %>
- </script>
-
-</body>
+    <script type="text/ng-template" id="/home.html">
+     <% include home.ejs %>
+   </script>
+  </body>
 </html>
