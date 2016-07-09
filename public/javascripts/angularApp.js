@@ -125,19 +125,73 @@ app.factory('receivers', ['$http', 'teams', '$localStorage',
       display: []
     };
 
+    /**
+     * @param  {[type]} request Array of dictionaries with entries for 'team' and 'year'
+     */
     o.getRequestedReceivers = function(request) {
       o.display.splice(0, o.display.length) // clear array, keep reference
 
-      var path = createGetRequestPath(request, o.display);
 
-      return $http.get(path).success(function(receivers) {
-        // Create spie charts for each of the requested team/date pairs.
-        var maxYards = getMaxYardsReached(request, receivers);
 
-        for (i = 0; i < request.length; i++) {
-          createSpie(i, request, receivers, teams, maxYards, o.display[i].receivers);
+      // 1. Determine what team-year info is not in local storage
+      if ($localStorage.teamyears === undefined) {
+        $localStorage.teamyears = {};
+      }
+      // 2. Request unknown information and store it in local storage
+
+      var remoteRequest = [];
+
+      for (i = 0; i < request.length; i++) {
+        var partial = request[i].team + "-" + request[i].year;
+
+        if ($localStorage.teamyears[partial] == undefined) {
+          remoteRequest.push(request[i]);
         }
-      });
+
+        o.display.push({
+          selectedTeam: request[i].team,
+          selectedYear: request[i].year,
+          receivers: []
+        });
+      }
+      // 3. Execute request as normal entirely from local storage.
+
+
+      if (remoteRequest.length > 0) {
+        var path = createGetRequestPath(remoteRequest, o.display);
+
+        return $http.get(path).success(function(receivers) {
+
+          // Get entries for each team-year pair:
+          // Add to local storage:
+
+          for (i = 0; i < remoteRequest.length; i++) {
+            var partial = remoteRequest[i].team + "-" + remoteRequest[i].year;
+
+            var selectedReceivers = _.filter(receivers, function(obj) {
+              return obj['YEAR'] == remoteRequest[i].year && obj['TEAM'] == remoteRequest[i].team;
+            });
+
+            $localStorage.teamyears[partial] = selectedReceivers;
+          }
+
+          // Create spie charts for each of the requested team/date pairs.
+          var maxYards = getMaxYardsReached(request, $localStorage.teamyears);
+
+          for (i = 0; i < request.length; i++) {
+            createSpie(i, request, $localStorage.teamyears, teams, maxYards, o.display[i].receivers);
+          }
+        });
+      } else {
+          // Create spie charts for each of the requested team/date pairs.
+          var maxYards = getMaxYardsReached(request, $localStorage.teamyears);
+
+          for (i = 0; i < request.length; i++) {
+            createSpie(i, request, $localStorage.teamyears, teams, maxYards, o.display[i].receivers);
+          }
+      }
+
+
     };
 
     return o;
@@ -178,12 +232,6 @@ function createGetRequestPath(request, display) {
   var path = '/receptions';
   for (i = 0; i < request.length; i++) {
     path += "/" + request[i].team + "/" + request[i].year;
-
-    display.push({
-      selectedTeam: request[i].team,
-      selectedYear: request[i].year,
-      receivers: []
-    });
   }
 
   return path;
@@ -195,12 +243,10 @@ function createGetRequestPath(request, display) {
  * @param  array request   The array of team-year pairs.
  * @param  array receivers Array of all receivers on those team-years.
  */
-function getMaxYardsReached(request, receivers) {
+function getMaxYardsReached(request, teamYearDict) {
   var maxYards = 0;
   for (i = 0; i < request.length; i++) {
-    var selectedReceivers = _.filter(receivers, function(obj) {
-      return obj['YEAR'] == request[i].year && obj['TEAM'] == request[i].team;
-    })
+    var selectedReceivers = teamYearDict[request[i].team + "-" + request[i].year];
 
     /*
      * Calculate total yards and receptions to normalize results against this:
@@ -208,8 +254,8 @@ function getMaxYardsReached(request, receivers) {
     var totalYards = 0;
 
     for (var num in selectedReceivers) {
-      if (receivers.hasOwnProperty(num)) {
-        var receiver = receivers[num];
+      if (selectedReceivers.hasOwnProperty(num)) {
+        var receiver = selectedReceivers[num];
         totalYards += parseFloat(receiver['YDS']);
       }
     }
@@ -221,11 +267,10 @@ function getMaxYardsReached(request, receivers) {
 
 }
 
-function createSpie(i, request, receivers, teams, maxYards, displayForYear) {
+function createSpie(i, request, teamYearDict, teams, maxYards, displayForYear) {
 
-  var selectedReceivers = _.filter(receivers, function(obj) {
-    return obj['YEAR'] == request[i].year && obj['TEAM'] == request[i].team;
-  })
+  var selectedReceivers = teamYearDict[request[i].team + "-" + request[i].year];
+
 
   displayForYear.splice(0, displayForYear.length) // clear array, keep reference
   convertToSpie(selectedReceivers, displayForYear, teams.teams, maxYards);
