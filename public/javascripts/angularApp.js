@@ -129,66 +129,43 @@ app.factory('receivers', ['$http', 'teams', '$localStorage',
      * @param  {[type]} request Array of dictionaries with entries for 'team' and 'year'
      */
     o.getRequestedReceivers = function(request) {
-      o.display.splice(0, o.display.length) // clear array, keep reference
 
-
-
-      // 1. Determine what team-year info is not in local storage
+      // 1. Instantiate local storage if not already done:
       if ($localStorage.teamyears === undefined) {
         $localStorage.teamyears = {};
       }
-      // 2. Request unknown information and store it in local storage
 
-      var remoteRequest = [];
+      // 2. Populate the display state object, used to store spie data for request response.
+      populateDisplayObject(o.display, request);
 
-      for (i = 0; i < request.length; i++) {
-        var partial = request[i].team + "-" + request[i].year;
-
-        if ($localStorage.teamyears[partial] == undefined) {
-          remoteRequest.push(request[i]);
-        }
-
-        o.display.push({
-          selectedTeam: request[i].team,
-          selectedYear: request[i].year,
-          receivers: []
-        });
-      }
-      // 3. Execute request as normal entirely from local storage.
+      // 3. Determine what information is not in local storage.
+      var remoteRequest = getRequiredRemoteRequests(request, $localStorage.teamyears);
 
 
       if (remoteRequest.length > 0) {
+        // 4A: Request items not stored in local storage yet:
         var path = createGetRequestPath(remoteRequest, o.display);
 
         return $http.get(path).success(function(receivers) {
 
-          // Get entries for each team-year pair:
-          // Add to local storage:
+          // Make remote request:
 
           for (i = 0; i < remoteRequest.length; i++) {
-            var partial = remoteRequest[i].team + "-" + remoteRequest[i].year;
 
             var selectedReceivers = _.filter(receivers, function(obj) {
               return obj['YEAR'] == remoteRequest[i].year && obj['TEAM'] == remoteRequest[i].team;
             });
 
-            $localStorage.teamyears[partial] = selectedReceivers;
+            // Add results of request to local storage:
+            $localStorage.teamyears[createKey(remoteRequest, i)] = selectedReceivers;
           }
 
-          // Create spie charts for each of the requested team/date pairs.
-          var maxYards = getMaxYardsReached(request, $localStorage.teamyears);
-
-          for (i = 0; i < request.length; i++) {
-            createSpie(i, request, $localStorage.teamyears, teams, maxYards, o.display[i].receivers);
-          }
+          // Create spie from local storage:
+          createAllRequestSpies(request, $localStorage.teamyears, teams, o.display);
         });
       } else {
-          // Create spie charts for each of the requested team/date pairs.
-          var maxYards = getMaxYardsReached(request, $localStorage.teamyears);
-
-          for (i = 0; i < request.length; i++) {
-            createSpie(i, request, $localStorage.teamyears, teams, maxYards, o.display[i].receivers);
-          }
+        // 4B: Everything is in local storage, populate display with spie data:
+        createAllRequestSpies(request, $localStorage.teamyears, teams, o.display);
       }
 
 
@@ -237,6 +214,50 @@ function createGetRequestPath(request, display) {
   return path;
 }
 
+function createAllRequestSpies(request, teamyearDict, teams, display) {
+  // Create spie charts for each of the requested team/date pairs.
+  var maxYards = getMaxYardsReached(request, teamyearDict);
+
+  for (i = 0; i < request.length; i++) {
+    createSpie(i, request, teamyearDict, teams, maxYards, display[i].receivers);
+  }
+}
+
+/**
+ * The display object stores the state that angular interacts with in the HTML files.
+ * When a new request is incoming, this function is used to update state to contain the
+ * requested spie charts.
+ */
+function populateDisplayObject(display, request) {
+  display.splice(0, display.length) // clear array, keep reference
+
+  for (i = 0; i < request.length; i++) {
+    display.push({
+      selectedTeam: request[i].team,
+      selectedYear: request[i].year,
+      receivers: []
+    });
+  }
+}
+
+/**
+ * Determine which of the requested team-year pairs are not in local storage,
+ * and return them in the form required to make a remote request for the data.
+ */
+function getRequiredRemoteRequests(request, teamYearDict) {
+  var remoteRequest = [];
+
+  for (i = 0; i < request.length; i++) {
+    var partial = request[i].team + "-" + request[i].year;
+
+    if (teamYearDict[partial] == undefined) {
+      remoteRequest.push(request[i]);
+    }
+  }
+
+  return remoteRequest;
+}
+
 /**
  * For each of the team/year pairs in the request, get the number of total team yards
  * for the team that had most team yards that year.
@@ -246,7 +267,7 @@ function createGetRequestPath(request, display) {
 function getMaxYardsReached(request, teamYearDict) {
   var maxYards = 0;
   for (i = 0; i < request.length; i++) {
-    var selectedReceivers = teamYearDict[request[i].team + "-" + request[i].year];
+    var selectedReceivers = teamYearDict[createKey(request, i)];
 
     /*
      * Calculate total yards and receptions to normalize results against this:
@@ -267,9 +288,13 @@ function getMaxYardsReached(request, teamYearDict) {
 
 }
 
+function createKey(request, i) {
+  return request[i].team + "-" + request[i].year;
+}
+
 function createSpie(i, request, teamYearDict, teams, maxYards, displayForYear) {
 
-  var selectedReceivers = teamYearDict[request[i].team + "-" + request[i].year];
+  var selectedReceivers = teamYearDict[createKey(request, i)];
 
 
   displayForYear.splice(0, displayForYear.length) // clear array, keep reference
