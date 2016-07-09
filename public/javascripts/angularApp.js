@@ -7,43 +7,46 @@ app.config([
 
     $stateProvider
       .state('home', {
-        url: '/nfl/:teamA/:yearA/:teamB?/:yearB?/:teamC?/:yearC?',
-        params : {
-          teamB: 'DAL',
-          yearB: '2014',
-          teamC: 'GB',
-          yearC: '2015'
-        },
+        url: '/nfl/:teamA/:yearA/:teamB/:yearB/:teamC/:yearC',
         templateUrl: '/home.html',
         controller: 'MainCtrl',
         resolve: {
           // Get data on page load:
-          resolveTeams: ['teams',
-            function(teams) {
-              return teams.getTeams();
-            }
-          ],
-          resolveReceivers: ['$stateParams', 'receivers',
-            function($stateParams, receivers) {
-              request = [{
-                team: $stateParams['teamA'],
-                year: $stateParams['yearA']
-              }, {
-                team: $stateParams['teamB'],
-                year: $stateParams['yearB']
-              }, {
-                team: $stateParams['teamC'],
-                year: $stateParams['yearC']
-              }, ];
-              return receivers.getRequestedReceivers(request);
-            }
-          ]
+          resolveTeams: ['teams', resolveTeamsRequest],
+          resolveReceivers: ['$stateParams', 'receivers', resolveReceiversRequest]
         }
       });
 
-   $urlRouterProvider.otherwise('nfl/GB/2013/GB/2014/GB/2015');
+    $urlRouterProvider.otherwise('nfl/GB/2013/GB/2014/GB/2015');
   }
 ]);
+
+function resolveTeamsRequest(teams) {
+  return teams.getTeams();
+}
+
+function resolveReceiversRequest($stateParams, receivers) {
+  request = [{
+    team: $stateParams['teamA'],
+    year: $stateParams['yearA']
+  }];
+
+  if ($stateParams['teamB'] != undefined && $stateParams['yearB'] != undefined) {
+    request.push({
+      team: $stateParams['teamB'],
+      year: $stateParams['yearB']
+    });
+  }
+
+  if ($stateParams['teamC'] != undefined && $stateParams['yearC'] != undefined) {
+    request.push({
+      team: $stateParams['teamC'],
+      year: $stateParams['yearC']
+    });
+  }
+
+  return receivers.getRequestedReceivers(request);
+}
 
 
 /*
@@ -86,22 +89,18 @@ app.factory('receivers', ['$http', 'teams', '$localStorage',
   function($http, teams, $localStorage) {
 
     var o = {
-      display: [{
-        selectedTeam: "GB",
-        selectedYear: 2013,
-        receivers: []
-      }, {
-        selectedTeam: "GB",
-        selectedYear: 2014,
-        receivers: []
-      }, {
-        selectedTeam: "GB",
-        selectedYear: 2015,
-        receivers: []
-      }, ]
+      /**
+       * Expected format of 'display' entries:
+       * selectedTeam: "GB",
+       * selectedYear: 2013,
+       * receivers: []
+       */
+      display: []
     };
 
     o.getRequestedReceivers = function(request) {
+      o.display.splice(0, o.display.length) // clear array, keep reference
+
       var path = createGetRequestPath(request, o.display);
 
       return $http.get(path).success(function(receivers) {
@@ -134,11 +133,7 @@ app.controller('MainCtrl', [
       // Change the URL, initiating a new request.
       $state.go('home', {
         teamA: $scope.display[0].selectedTeam,
-        yearA: $scope.display[0].selectedYear,
-        teamB: $scope.display[1].selectedTeam,
-        yearB: $scope.display[1].selectedYear,
-        teamC: $scope.display[2].selectedTeam,
-        yearC: $scope.display[2].selectedYear
+        yearA: $scope.display[0].selectedYear
       });
     };
   }
@@ -148,15 +143,19 @@ function createGetRequestPath(request, display) {
   var path = '/receptions';
   for (i = 0; i < request.length; i++) {
     path += "/" + request[i].team + "/" + request[i].year;
-    display[i].selectedTeam = request[i].team;
-    display[i].selectedYear = request[i].year;
+
+    display.push({
+      selectedTeam: request[i].team,
+      selectedYear: request[i].year,
+      receivers: []
+    });
   }
 
   return path;
 }
 
 /**
- * For each of the team/year pairs in the request, get the number of total team yards 
+ * For each of the team/year pairs in the request, get the number of total team yards
  * for the team that had most team yards that year.
  * @param  array request   The array of team-year pairs.
  * @param  array receivers Array of all receivers on those team-years.
