@@ -31,6 +31,9 @@ router.get('/receptions/:teamA/:yearA/:teamB?/:yearB?/:teamC?/:yearC?', function
   });
 });
 
+/**
+ * Call to get NFL teams and team colors.
+ */
 router.get('/teams', function(req, res, next) {
   Team.
   find({}).exec(function(err, team){

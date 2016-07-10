@@ -10,9 +10,9 @@
 	<p>The following spie charts show receiving yards per wide receiver, with YAC indicated by the outer slice on each segment. The width of each segment is based on the relative number of receptions, the length of each segment is based on the relative number of receiving yards.</p>
 
 	<div class="row">
-		<div ng-repeat="chart in display" class="col-md-4">
+		<div ng-repeat="chart in display" ng-class="styleToUse()">
 			<div id="canvas-holder" style="width:100%">
-				<canvas tc-chartjs chart-type="Spie" chart-data="chart.receivers" chart-options="options" ></canvas>
+				<canvas tc-chartjs chart-type="Spie" chart-data="chart.receivers" chart-options="options"></canvas>
 			</div> 
 			<div  style="text-align: center;">
 
