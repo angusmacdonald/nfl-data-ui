@@ -10,7 +10,7 @@
 
 	<div class="row">
 		<div ng-repeat="chart in display" ng-class="'col-md-' + (12 / display.length)">
-			<div id="canvas-holder" style="width:100%">
+			<div id="canvas-holder" ng-style="{width: (100 / display.length) + '%'}">
 				<canvas tc-chartjs chart-type="Spie" chart-data="chart.receivers" chart-options="options"></canvas>
 			</div> 
 			<div  style="text-align: center;">
