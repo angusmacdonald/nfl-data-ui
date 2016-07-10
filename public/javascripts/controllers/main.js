@@ -10,9 +10,14 @@ app.controller('MainCtrl', [
     $scope.teams = teams.teams;
     $scope.years = years.years;
 
+    // Container for  reception data:
     $scope.display = receivers.display;
-    $scope.options = { responsive:true };
+
     
+
+    // Chart options:
+    $scope.options = { responsive:true };
+
     $scope.updateDisplay = function(chart) {
       // Change the URL, initiating a new request.
       var nextState = 'home' + (($scope.display.length > 1) ? "." + $scope.display.length: "");

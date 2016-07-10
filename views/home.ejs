@@ -5,7 +5,17 @@
 		<p class="lead">A visual analysis of teams' offensive production over the last 10 years.</p>
 	</div>
 
-	<h3>Production Visualized in Spie Charts</h3>
+
+	<div class="row">
+		<div ng-repeat="chart in display" ng-class="'col-md-' + (12 / display.length)">
+			<div  style="text-align: center;">
+				<% include selectors.ejs %>
+			</div>
+		</div>
+	</div>
+
+
+	<h3>Distribution of Receptions</h3>
 	<p>The following spie charts show receiving yards per wide receiver, with YAC indicated by the outer slice on each segment. The width of each segment is based on the relative number of receptions, the length of each segment is based on the relative number of receiving yards.</p>
 
 	<div class="row">
@@ -17,12 +27,12 @@
 	</div>
 
 	
+	<h3>Totals</h3>
 	<div class="row">
-		<div ng-repeat="chart in display" ng-class="'col-md-' + (12 / display.length)">
+		<div ng-repeat="team in display" ng-class="'col-md-' + (12 / display.length)">
 			
-			<div  style="text-align: center;">
-				<% include selectors.ejs %>
-			</div>
+			<p><strong>YAC:</strong> {{ team.stats.yac }} yards ({{ (team.stats.yac / team.stats.yards) * 100 | number:0 }}% total)</p>
+			<p><strong>Total:</strong> {{ team.stats.yards }} yards</p>
 		</div>
 	</div>
 

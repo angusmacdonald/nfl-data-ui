@@ -12,6 +12,7 @@ app.factory('receivers', ['$http', 'teams', '$localStorage',
        * selectedTeam: "GB",
        * selectedYear: 2013,
        * receivers: []
+       * stats: {}
        */
       display: []
     };
@@ -28,6 +29,7 @@ app.factory('receivers', ['$http', 'teams', '$localStorage',
 
       // 2. Populate the display state object, used to store spie data for request response.
       populateDisplayObject(o.display, request);
+
 
       // 3. Determine what information is not in local storage.
       var remoteRequest = getRequiredRemoteRequests(request, $localStorage.teamyears);
@@ -52,6 +54,7 @@ app.factory('receivers', ['$http', 'teams', '$localStorage',
           }
 
           // Create spie from local storage:
+
           createAllRequestSpies(request, $localStorage.teamyears, teams, o.display);
         });
       } else {
@@ -81,7 +84,7 @@ function createAllRequestSpies(request, teamyearDict, teams, display) {
   var maxYards = getMaxYardsReached(request, teamyearDict);
 
   for (i = 0; i < request.length; i++) {
-    createSpie(i, request, teamyearDict, teams, maxYards, display[i].receivers);
+    createSpie(i, request, teamyearDict, teams, maxYards, display[i]);
   }
 }
 
@@ -97,7 +100,8 @@ function populateDisplayObject(display, request) {
     display.push({
       selectedTeam: request[i].team,
       selectedYear: request[i].year,
-      receivers: []
+      receivers: [],
+      stats: {}
     });
   }
 }
@@ -154,30 +158,39 @@ function createKey(request, i) {
   return request[i].team + "-" + request[i].year;
 }
 
-function createSpie(i, request, teamYearDict, teams, maxYards, displayForYear) {
+function createSpie(i, request, teamYearDict, teams, maxYards, display) {
 
   var selectedReceivers = teamYearDict[createKey(request, i)];
 
 
-  displayForYear.splice(0, displayForYear.length) // clear array, keep reference
-  convertToSpie(selectedReceivers, displayForYear, teams.teams, maxYards);
+  display.receivers.splice(0, display.receivers.length) // clear array, keep reference
+  convertToSpie(selectedReceivers, display, teams.teams, maxYards);
 
 }
 
-function convertToSpie(receivers, receiversArray, teams, maxYards) {
+function convertToSpie(receivers, display, teams, maxYards) {
+
+  var receiversArray = display.receivers;
+  var statsArray = display.stats;
   /*
    * Calculate total yards and receptions to normalize results against this:
    */
   var totalReceptionNumbers = 0;
   var totalYards = 0;
+  var totalYac = 0;
 
   for (var num in receivers) {
     if (receivers.hasOwnProperty(num)) {
       var receiver = receivers[num];
       totalReceptionNumbers += parseFloat(receiver['REC']);
       totalYards += parseFloat(receiver['YDS']);
+      totalYac += parseFloat(receiver['YAC']);
     }
   }
+
+  statsArray.yards = totalYards;
+  statsArray.yac = totalYac;
+  statsArray.receptions = totalReceptionNumbers;
 
   /*
    * For each receiver, create a player object representing the state required by the spie chart.
