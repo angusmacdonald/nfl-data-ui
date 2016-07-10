@@ -27,17 +27,5 @@ app.controller('MainCtrl', [
 
       $state.go(nextState, params);
     };
-
-    $scope.styleToUse = function(){
-      var length = $scope.display.length;
-
-      if (length == 1){
-        return "col-md-12";
-      } else if (length == 2){
-        return "col-md-6";
-      } else {
-        return "col-md-4";
-      }
-    };
   }
 ]);
