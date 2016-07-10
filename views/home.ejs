@@ -10,9 +10,16 @@
 
 	<div class="row">
 		<div ng-repeat="chart in display" ng-class="'col-md-' + (12 / display.length)">
-			<div id="canvas-holder" ng-style="{width: (100 / display.length) + '%'}">
-				<canvas tc-chartjs chart-type="Spie" chart-data="chart.receivers" chart-options="options"></canvas>
+			<div id="canvas-holder" style="margin: auto; display: block; height:40%">
+				<canvas tc-chartjs chart-type="Spie" chart-data="chart.receivers" chart-options="options" width="200px" height = "250px"></canvas>
 			</div> 
+		</div>
+	</div>
+
+	
+	<div class="row">
+		<div ng-repeat="chart in display" ng-class="'col-md-' + (12 / display.length)">
+			
 			<div  style="text-align: center;">
 				<% include selectors.ejs %>
 			</div>

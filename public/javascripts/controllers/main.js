@@ -11,7 +11,8 @@ app.controller('MainCtrl', [
     $scope.years = years.years;
 
     $scope.display = receivers.display;
-
+    $scope.options = { responsive:true };
+    
     $scope.updateDisplay = function(chart) {
       // Change the URL, initiating a new request.
       var nextState = 'home' + (($scope.display.length > 1) ? "." + $scope.display.length: "");
