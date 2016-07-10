@@ -1,0 +1,11 @@
+<select name="teamSelectA" id="teamSelectA" ng-model="chart.selectedTeam" ng-change="updateDisplay(chart)">
+<div>
+<option ng-repeat="team in teams" ng-value="team.code" >{{team.code}}</option>
+</div>
+</select>
+
+<select name="yearSelectA" id="yearSelectA" ng-model="chart.selectedYear" ng-change="updateDisplay(chart)">
+<div >
+<option ng-repeat="year in years" ng-value="year" >{{year}}</option>
+</div>
+</select>

@@ -1,4 +1,3 @@
-
 <div class="container">
 
 	<div class="page-header">
@@ -6,7 +5,7 @@
 		<p class="lead">A visual analysis of teams' offensive production over the last 10 years.</p>
 	</div>
 
-	<h3>Three Years of YAC</h3>
+	<h3>Production Visualized in Spie Charts</h3>
 	<p>The following spie charts show receiving yards per wide receiver, with YAC indicated by the outer slice on each segment. The width of each segment is based on the relative number of receptions, the length of each segment is based on the relative number of receiving yards.</p>
 
 	<div class="row">
@@ -15,31 +14,14 @@
 				<canvas tc-chartjs chart-type="Spie" chart-data="chart.receivers" chart-options="options"></canvas>
 			</div> 
 			<div  style="text-align: center;">
-
-				<select name="teamSelectA" id="teamSelectA" ng-model="chart.selectedTeam" ng-change="updateDisplay(chart)">
-					<div>
-						<option ng-repeat="team in teams" ng-value="team.code" >{{team.code}}</option>
-					</div>
-				</select>
-
-				<select name="yearSelectA" id="yearSelectA" ng-model="chart.selectedYear" ng-change="updateDisplay(chart)">
-					<div >
-						<option ng-repeat="year in years" ng-value="year" >{{year}}</option>
-					</div>
-				</select>
-
+				<% include selectors.ejs %>
 			</div>
 		</div>
 	</div>
 
 
 	<h3>Notes</h3>
-	<p class="text-warning">It's hard to visualize YAC for running backs, because the stats produced by various outlets always shows a much higher YAC than total yardage. This may be because YAC can start from behind the line of scrimmage, whereas yardage doesn't, but it means that this visualization typicallyshows all running back yards as consisting entirely of YAC.</p>
-	<p class="text-warning">The data is from receiving stats, so if a player was traded half-way through a season they are not included (the data would mark their team as GB/BUF, for example, making it impossible to tell where the yards were produced).</p>
-	<p class="text-warning">I couldn't find recorded YAC stats prior to 2006, hence the data stopping there.</p>
+	<% include notes.ejs %>
 
 	<hr>
-
-
-
-    </div> <!-- /container -->
+</div> <!-- /container -->
