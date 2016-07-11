@@ -13,14 +13,16 @@ app.controller('MainCtrl', [
     // Container for  reception data:
     $scope.display = receivers.display;
 
-    
+
 
     // Chart options:
-    $scope.options = { responsive:true };
+    $scope.options = {
+      responsive: true
+    };
 
-    $scope.updateDisplay = function(chart) {
+    $scope.updateDisplay = function() {
       // Change the URL, initiating a new request.
-      var nextState = 'home' + (($scope.display.length > 1) ? "." + $scope.display.length: "");
+      var nextState = 'home' + (($scope.display.length > 1) ? "." + $scope.display.length : "");
 
       // Create query parameters from all defined team-year pairs:
       var params = {};
@@ -32,6 +34,26 @@ app.controller('MainCtrl', [
       }
 
       $state.go(nextState, params);
+    };
+
+    $scope.removeEntry = function(selectedTeam, selectedYear) {
+      $scope.display = _.without($scope.display, _.findWhere(
+        $scope.display, {
+          'selectedTeam': selectedTeam,
+          'selectedYear': selectedYear
+        }
+      ));
+
+      $scope.updateDisplay();
+    };
+
+    $scope.addEntry = function(selectedTeam, selectedYear) {
+      $scope.display.push({
+        'selectedTeam': selectedTeam,
+        'selectedYear': selectedYear
+      });
+
+      $scope.updateDisplay();
     };
   }
 ]);
