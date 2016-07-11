@@ -2,7 +2,12 @@
 
 	<div class="page-header">
 		<h1>Receiver Stats Visualized</h1>
-		<p class="lead">A visual analysis of teams' offensive production over the last 10 years.</p>
+		<p class="lead">A visual analysis of teams' offensive production over the last 10 years.
+		<span style="float: right" ng-show="display.length < 3" ng-click="addEntry(display[display.length-1].selectedTeam, display[display.length-1].selectedYear)">Add Another Chart
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+		</span>
+		</p>
+
 	</div>
 
 
