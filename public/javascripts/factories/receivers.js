@@ -11,7 +11,9 @@ app.factory('receivers', ['$http', 'teams', '$localStorage',
        * Expected format of 'display' entries:
        * selectedTeam: "GB",
        * selectedYear: 2013,
-       * receivers: []
+       * renderedTeam: "GB",
+       * renderedYear: "2014",
+       * receivers: [],
        * stats: {}
        */
       display: []
@@ -84,7 +86,12 @@ function createAllRequestSpies(request, teamyearDict, teams, display) {
   var maxYards = getMaxYardsReached(request, teamyearDict);
 
   for (i = 0; i < request.length; i++) {
-    createSpie(i, request, teamyearDict, teams, maxYards, display[i]);
+    if (display[i].receivers.length == 0){
+      // If we haven't already populated this entry:
+      display[i].renderedTeam = request[i].team;
+      display[i].renderedYear = request[i].year;
+      createSpie(i, request, teamyearDict, teams, maxYards, display[i]);
+    }
   }
 }
 
@@ -94,15 +101,34 @@ function createAllRequestSpies(request, teamyearDict, teams, display) {
  * requested spie charts.
  */
 function populateDisplayObject(display, request) {
-  display.splice(0, display.length) // clear array, keep reference
-
   for (i = 0; i < request.length; i++) {
-    display.push({
-      selectedTeam: request[i].team,
-      selectedYear: request[i].year,
-      receivers: [],
-      stats: {}
-    });
+
+    if (display[i] != undefined && (display[i].renderedTeam != request[i].team ||
+      display[i].renderedYear != request[i].year)) {
+      
+      display[i] = {
+        selectedTeam: request[i].team,
+        selectedYear: request[i].year,
+        renderedTeam: request[i].team,
+        renderedYear: request[i].year,
+        receivers: [],
+        stats: {}
+      };
+    } else if (display[i] == undefined){
+      display.push({
+        selectedTeam: request[i].team,
+        selectedYear: request[i].year,
+        renderedTeam: request[i].team,
+        renderedYear: request[i].year,
+        receivers: [],
+        stats: {}
+      });
+    }
+  }
+
+  // Remove any remaining elements not in the request.
+  for (i = request.length; i < display.length; i++){
+     array.splice(i, 1); // remove element
   }
 }
 
@@ -204,7 +230,7 @@ function convertToSpie(receivers, display, teams, maxYards) {
 
       var chartHeight = Math.max(parseFloat(10), ((receiver['YDS'] / parseFloat(maxYards)) * 100) * 2);
 
-      if (receiver['YDS'] <= 0){
+      if (receiver['YDS'] <= 0) {
         // Negative numbers show as max height otherwise (e.g. 2012 Aaron Rodgers)
         // 2015 Cowboys doesn't display otherwise, because of Jeff Swain 0 numbers.
         continue;
@@ -224,14 +250,14 @@ function convertToSpie(receivers, display, teams, maxYards) {
         height: chartHeight * percentageNonYac * maxPlayerHeight,
         color: primaryColor,
         highlight: shadeColor(primaryColor, 0.2),
-        label: Math.max(0, receiver['YDS'] - receiver['YAC']) + " yards in air"
+        label: Math.max(0, receiver['YDS'] - receiver['YAC']) + " yds in air"
       };
 
       var sliceYac = {
         height: chartHeight * percentageYac * maxPlayerHeight,
         color: secondaryColor,
         highlight: shadeColor(secondaryColor, 0.2),
-        label: receiver['YAC'] + " yards after catch"
+        label: receiver['YAC'] + " yds YAC"
       };
 
       // Create new player info and add it to the results array:
