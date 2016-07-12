@@ -204,6 +204,12 @@ function convertToSpie(receivers, display, teams, maxYards) {
 
       var chartHeight = Math.max(parseFloat(10), ((receiver['YDS'] / parseFloat(maxYards)) * 100) * 2);
 
+      if (receiver['YDS'] <= 0){
+        // Negative numbers show as max height otherwise (e.g. 2012 Aaron Rodgers)
+        // 2015 Cowboys doesn't display otherwise, because of Jeff Swain 0 numbers.
+        continue;
+      }
+
       var percentageYac = Math.min(parseFloat(1), parseFloat(receiver['YAC']) / parseFloat(receiver['YDS']));
       var percentageNonYac = 1.0 - percentageYac;
 
