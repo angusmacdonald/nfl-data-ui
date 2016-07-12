@@ -24,6 +24,7 @@ router.get('/receptions/:teamA/:yearA/:teamB?/:yearB?/:teamC?/:yearC?', function
                 { 'TEAM': req.params['teamC'], 'YEAR': req.params['yearC'] }
             ]}
             ).
+  sort({'YDS': -1}).
   exec(function(err, receiving){
     if(err){ return next(err); }
 
