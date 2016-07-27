@@ -10,10 +10,14 @@ For a given team the spie chart shows the:
 
 The solution allows users to view up to three spie charts at the same time, either for the same team over different years, or for different teams.
 
+![Screenshot of the application](doc/img/full-screen.png)
+
 ## Technical
 The solution is written in AngularJS and Node, and uses data obtained through the [nfl-data](https://github.com/angusmacdonald/nfl-data-ui) tool.
 
 When the webpage is initially opened a default set of spie charts are shown. The request for spie charts is made to the node server, which forwards the request onto a Mongo DB database.
+
+![Spie chart example A](doc/img/packers-13.png)  ![Spie chart example B](doc/img/patriots-07.png)
 
 The following features are notable:
  - Local storage is used extensively, so spie data is only requested once for each team-year pairing.
