@@ -24,5 +24,5 @@ The following features are notable:
  - The page URL represents what spie charts are currently shown, making it easy to share links to specific sets of charts.
  - The data is converted into the spie chart format client-side, allowing it to be used in a number of different ways, rather than for only rendering spie charts.
  - Team colors are used to display chart information, with data taken from the excellent [teamcolors](http://teamcolors.arc90.com/) site.
- - 
+
 ![Spie chart example B](doc/img/patriots-07.png "Spie Chart Example - Patriots 2007")
