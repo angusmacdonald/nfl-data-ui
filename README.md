@@ -17,7 +17,7 @@ The solution is written in AngularJS and Node, and uses data obtained through th
 
 When the webpage is initially opened a default set of spie charts are shown. The request for spie charts is made to the node server, which forwards the request onto a Mongo DB database.
 
-![Spie chart example A](doc/img/packers-13.png Spie Chart Example - Packers 2013) 
+![Spie chart example A](doc/img/packers-13.png "Spie Chart Example - Packers 2013") 
 
 The following features are notable:
  - Local storage is used extensively, so spie data is only requested once for each team-year pairing.
@@ -25,4 +25,4 @@ The following features are notable:
  - The data is converted into the spie chart format client-side, allowing it to be used in a number of different ways, rather than for only rendering spie charts.
  - Team colors are used to display chart information, with data taken from the excellent [teamcolors](http://teamcolors.arc90.com/) site.
  - 
-![Spie chart example B](doc/img/patriots-07.png Spie Chart Example - Patriots 2007)
+![Spie chart example B](doc/img/patriots-07.png "Spie Chart Example - Patriots 2007")
